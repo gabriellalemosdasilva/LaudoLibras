@@ -3,7 +3,7 @@ import pandas as pd
 from pypdf import PdfReader
 
 # Página Inicial
-st.set_page_config(page_title="Tradutor de Laudos para Libras", layout="wide")
+st.set_page_config(page_title="TraduzLibras RX", layout="wide")
 
 st.title("🩺 TraduzLibras RX")
 st.markdown("Faça o upload do seu laudo médico e visualize os termos e explicações em Libras.")
