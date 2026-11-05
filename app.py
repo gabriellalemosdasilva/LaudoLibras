@@ -91,8 +91,11 @@ if uploaded_file is not None:
     with st.expander("📄 Ver texto processado do laudo"):
         st.write(texto_analise)
 
-    # Identificação dos termos
-    termos_cadastrados = df_glossario['termo'].tolist()
+    # Identificação dos termos (ignora 'instruções' e 'instrucoes')
+    termos_cadastrados = [
+        t for t in df_glossario['termo'].tolist() 
+        if t not in ["instruções", "instrucoes"]
+    ]
     termos_encontrados = [t for t in termos_cadastrados if str(t) in texto_analise]
 
     if termos_encontrados:
@@ -107,7 +110,7 @@ if uploaded_file is not None:
 
                 col1, col2 = st.columns(2)
                 
-                # Coluna 1 - sinal em Libras, reprodução automática e em Loop
+                # Coluna 1 - sinal em Libras
                 with col1:
                     st.subheader("🤲 Sinal em LIBRAS")
                     if pd.notna(linha['sinal']) and str(linha['sinal']).strip() != "":
@@ -127,3 +130,13 @@ if uploaded_file is not None:
         st.warning("Nenhum termo clínico cadastrado no glossário foi identificado neste laudo.")
 else:
     st.info("Faça o upload de um laudo para iniciar a análise.")
+    st.markdown("---")
+    
+    # Vídeo instruções em Libras
+    linha_instrucoes = df_glossario[df_glossario['termo'].isin(["instruções", "instrucoes"])]
+    
+    if not linha_instrucoes.empty:
+        url_instrucoes = linha_instrucoes.iloc[0]['sinal']
+        if pd.notna(url_instrucoes) and str(url_instrucoes).strip() != "":
+            st.subheader("🤟 Instruções de Uso em Libras")
+            st.markdown(montar_player_loop(url_instrucoes), unsafe_allow_html=True)
