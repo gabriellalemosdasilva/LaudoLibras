@@ -3,10 +3,10 @@ import pandas as pd
 from pypdf import PdfReader
 
 # Página Inicial
-st.set_page_config(page_title="TraduzLibras RX", layout="wide")
+st.set_page_config(page_title="LaudoLibras", layout="wide")
 
-st.title("🩺 TraduzLibras RX")
-st.markdown("Faça o upload do seu laudo médico e visualize os termos e explicações em Libras.")
+st.title("🩺 LaudoLibras")
+st.markdown("Faça o upload do seu laudo médico e visualize os sinais e explicações em Libras.")
 
 # url do google sheets
 URL_PLANILHA_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvbw2ebNuVIG6VW0aL8aSkYHumixO8HqE3ZgOHsoAozlLQQDOGgoc112Ppc1eMpl_uTfZYiU6ZgNPJ/pub?output=csv"
@@ -91,7 +91,7 @@ if uploaded_file is not None:
     with st.expander("📄 Ver texto processado do laudo"):
         st.write(texto_analise)
 
-    # Identificação dos termos (ignora 'instruções' e 'instrucoes')
+    # Instruções
     termos_cadastrados = [
         t for t in df_glossario['termo'].tolist() 
         if t not in ["instruções", "instrucoes"]
