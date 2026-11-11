@@ -2,16 +2,14 @@ import streamlit as st
 import pandas as pd
 from pypdf import PdfReader
 
-# Página Inicial
+
 st.set_page_config(page_title="LaudoLibras", layout="wide")
 
 st.title("🩺 LaudoLibras")
 st.markdown("Faça o upload do seu laudo médico e visualize os sinais e explicações em Libras.")
 
-# url do google sheets
 URL_PLANILHA_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvbw2ebNuVIG6VW0aL8aSkYHumixO8HqE3ZgOHsoAozlLQQDOGgoc112Ppc1eMpl_uTfZYiU6ZgNPJ/pub?output=csv"
 
-# Carregamento do glossário
 @st.cache_data(ttl=10)
 def carregar_glossario(url):
     try:
@@ -22,7 +20,6 @@ def carregar_glossario(url):
         st.error(f"Erro ao carregar glossário online: {e}")
         return pd.DataFrame(columns=["termo", "sinal", "explicacao"])
 
-# Função para youtube - loop e autoplay
 def montar_player_loop(url_youtube: str) -> str:
     url_str = str(url_youtube).strip()
     video_id = ""
@@ -51,13 +48,11 @@ def montar_player_loop(url_youtube: str) -> str:
 
 df_glossario = carregar_glossario(URL_PLANILHA_CSV)
 
-# Upload do arquivo
 uploaded_file = st.file_uploader("Escolha o arquivo do laudo (PDF ou TXT)", type=['txt', 'pdf'])
 
 if uploaded_file is not None:
     conteudo_bruto = ""
 
-    # Extração de texto
     if uploaded_file.name.endswith(".pdf"):
         try:
             reader = PdfReader(uploaded_file)
@@ -75,7 +70,6 @@ if uploaded_file is not None:
 
     conteudo_limpo = " ".join(conteudo_bruto.split()).lower()
 
-    # Procurar Conclusão
     secoes_relevantes = [
         "conclusão", "conclusao", "impressão diagnóstica", 
         "impressao diagnostica", "diagnóstico", "diagnostico", "comentários"
@@ -91,7 +85,6 @@ if uploaded_file is not None:
     with st.expander("📄 Ver texto processado do laudo"):
         st.write(texto_analise)
 
-    # Instruções
     termos_cadastrados = [
         t for t in df_glossario['termo'].tolist() 
         if t not in ["instruções", "instrucoes"]
@@ -110,7 +103,6 @@ if uploaded_file is not None:
 
                 col1, col2 = st.columns(2)
                 
-                # Coluna 1 - sinal em Libras
                 with col1:
                     st.subheader("🤲 Sinal em LIBRAS")
                     if pd.notna(linha['sinal']) and str(linha['sinal']).strip() != "":
@@ -119,7 +111,6 @@ if uploaded_file is not None:
                     else:
                         st.warning("Vídeo do sinal não cadastrado.")
 
-                # Coluna 2 - explicação em Libras
                 with col2:
                     st.subheader("💡 Explicação Clínica")
                     if pd.notna(linha['explicacao']) and str(linha['explicacao']).strip() != "":
@@ -132,7 +123,6 @@ else:
     st.info("Faça o upload de um laudo para iniciar a análise.")
     st.markdown("---")
     
-    # Vídeo instruções em Libras
     linha_instrucoes = df_glossario[df_glossario['termo'].isin(["instruções", "instrucoes"])]
     
     if not linha_instrucoes.empty:
