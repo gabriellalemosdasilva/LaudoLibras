@@ -1,2 +1,2 @@
 # LaudoLibras
-Ferramenta digital assistiva em Streamlit para tradução laudo médicos em Libras.
+Ferramenta digital assistiva em Streamlit para tradução de laudos médicos em Libras.
