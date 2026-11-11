@@ -2,9 +2,7 @@ import streamlit as st
 import pandas as pd
 from pypdf import PdfReader
 
-
 st.set_page_config(page_title="LaudoLibras", layout="wide")
-
 st.title("🩺 LaudoLibras")
 st.markdown("Faça o upload do seu laudo médico e visualize os sinais e explicações em Libras.")
 
